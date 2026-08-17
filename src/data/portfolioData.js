@@ -100,31 +100,100 @@ export const skillsByCategory = [
 
 export const projects = [
   {
-    title: 'Portfolio Dashboard',
+    title: 'JDL Security Systems',
+    category: 'CCTV • FDAS • Network Infrastructure',
     description:
-      'A sleek admin-style dashboard focused on analytics, charts, and task management for modern teams.',
-    tech: ['React', 'Tailwind', 'Charts'],
+      'A modern security solutions showcase inspired by JDL Davao, featuring surveillance systems, fire safety coverage, and end-to-end commercial protection.',
+    overview:
+      'Built to feel premium and trustworthy, this concept highlights the company’s core service lines and demonstrates how a security brand can communicate technical confidence and local reliability.',
+    tech: ['CCTV', 'FDAS', 'Networking', 'Access Control'],
     year: '2025',
     featured: true,
-    link: '#',
+    accent: 'from-cyan-500 via-sky-500 to-blue-700',
+    link: 'https://jdldavao.com/',
+    metrics: [
+      { label: 'Monitoring', value: '24/7' },
+      { label: 'Systems', value: 'FDAS + CCTV' },
+      { label: 'Support', value: 'On-site' },
+    ],
+    highlights: [
+      'High-definition surveillance coverage',
+      'Fire alarm and life safety systems',
+      'Commercial and residential protection',
+      'Structured cabling and network support',
+    ],
   },
   {
-    title: 'E-Commerce Landing Page',
+    title: 'Access Control & Door Security',
+    category: 'Smart Entry • Security Doors • Monitoring',
     description:
-      'A premium product landing page with product highlights, reviews, pricing cards, and a conversion-focused layout.',
-    tech: ['React', 'CSS', 'UX Design'],
+      'A premium overview of access control systems, smart locks, intercoms, and secure entry installations designed for offices, commercial spaces, and gated communities.',
+    overview:
+      'This product layout focuses on trust, convenience, and layered protection while enhancing the visual identity of a modern security brand.',
+    tech: ['Door Access', 'Intercom', 'Smart Locks', 'Monitoring'],
     year: '2025',
     featured: false,
-    link: '#',
+    accent: 'from-violet-500 via-indigo-500 to-blue-700',
+    link: 'https://jdldavao.com/',
+    metrics: [
+      { label: 'Access', value: 'Multi-user' },
+      { label: 'Control', value: 'Remote' },
+      { label: 'Setup', value: 'Fast' },
+    ],
+    highlights: [
+      'Secure access management',
+      'Visitor and staff monitoring',
+      'Entry automation for properties',
+      'Reliable intercom integration',
+    ],
   },
   {
-    title: 'Task Manager App',
+    title: 'Fire Alarm & Detection',
+    category: 'Life Safety • Detection • Compliance',
     description:
-      'A productivity app with filterable tasks, local storage, and a clean interface for managing daily priorities.',
-    tech: ['JavaScript', 'React', 'LocalStorage'],
-    year: '2024',
+      'A sleek fire safety product card showing alarm systems, smoke detection, emergency response planning, and code-compliant installation services.',
+    overview:
+      'This concept emphasizes safety-first design with a polished layout that communicates urgency, professionalism, and reliability for building owners and operators.',
+    tech: ['Smoke Detectors', 'Alarm Panels', 'Emergency Response', 'Maintenance'],
+    year: '2025',
     featured: false,
-    link: '#',
+    accent: 'from-rose-500 via-red-500 to-orange-500',
+    link: 'https://jdldavao.com/',
+    metrics: [
+      { label: 'Detection', value: 'Early' },
+      { label: 'Response', value: 'Instant' },
+      { label: 'Coverage', value: 'Commercial' },
+    ],
+    highlights: [
+      'Smoke and heat detection',
+      'Emergency alarm integration',
+      'Service and preventive maintenance',
+      'Safety-first deployment plans',
+    ],
+  },
+  {
+    title: 'PBX & Communication Systems',
+    category: 'PABX • Office Communication • Integration',
+    description:
+      'An executive communication suite concept combining PBX systems, intercom integration, and internal office connectivity for modern businesses.',
+    overview:
+      'The design uses stronger contrast and layered cards to showcase how business communication systems can feel premium while staying highly functional.',
+    tech: ['PBX', 'Intercom', 'VoIP', 'Office Systems'],
+    year: '2025',
+    featured: false,
+    accent: 'from-amber-400 via-orange-500 to-red-600',
+    link: 'https://jdldavao.com/',
+    metrics: [
+      { label: 'Calls', value: 'Clear' },
+      { label: 'Setup', value: 'Integrated' },
+      { label: 'Scale', value: 'Business' },
+    ],
+    highlights: [
+      'Reliable internal communication',
+      'Seamless intercom integration',
+      'Business-ready voice systems',
+      'Support for growing teams',
+    ],
   },
 ]
 
