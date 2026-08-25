@@ -1,9 +1,15 @@
+import capstoneScreenshot from '../assets/capstone.png'
+import aiFestCertificate from '../assets/AIFEST.png'
+import nc2Certificate from '../assets/nc2.jpg'
+import publicPresentationCertificate from '../assets/publicpresentation.jpg'
+import startupPhotoOne from '../assets/startup1.jpg'
+import startupPhotoTwo from '../assets/startup2.jpg'
+
 export const navItems = [
   { label: 'Home', href: '#home' },
   { label: 'About', href: '#about' },
   { label: 'Skills', href: '#skills' },
   { label: 'Projects', href: '#projects' },
-  { label: 'Education', href: '#education' },
   { label: 'Certifications', href: '#certifications' },
   { label: 'Experience', href: '#experience' },
   { label: 'Contact', href: '#contact' },
@@ -100,75 +106,148 @@ export const skillsByCategory = [
 
 export const projects = [
   {
-    title: 'Portfolio Dashboard',
+    title: 'JDL Security Systems',
+    category: 'CCTV • FDAS • Network Infrastructure',
     description:
-      'A sleek admin-style dashboard focused on analytics, charts, and task management for modern teams.',
-    tech: ['React', 'Tailwind', 'Charts'],
+      'A modern security solutions showcase inspired by JDL Davao, featuring surveillance systems, fire safety coverage, and end-to-end commercial protection.',
+    overview:
+      'Built to feel premium and trustworthy, this concept highlights the company’s core service lines and demonstrates how a security brand can communicate technical confidence and local reliability.',
+    tech: ['CCTV', 'FDAS', 'Networking', 'Access Control'],
     year: '2025',
+    featured: false,
+    accent: 'from-cyan-500 via-sky-500 to-blue-700',
+    link: 'https://jdldavao.com/',
+    metrics: [
+      { label: 'Monitoring', value: '24/7' },
+      { label: 'Systems', value: 'FDAS + CCTV' },
+      { label: 'Support', value: 'On-site' },
+    ],
+    highlights: [
+      'High-definition surveillance coverage',
+      'Fire alarm and life safety systems',
+      'Commercial and residential protection',
+      'Structured cabling and network support',
+    ],
+  },
+  {
+    title: 'LGU Matanao DMTS',
+    category: 'Real Time • Tracking System • Management',
+    description:
+      'A comprehensive digital media tracking system for LGU Matanao, streamlining document management, workflow automation, and organizational efficiency for local government operations.',
+    overview:
+      'Built to support modern municipal workflows, this system provides a robust platform for tracking, managing, and organizing digital assets with seamless integration across departments and stakeholders.',
+    tech: ['React', 'Laravel', 'MySQL', 'Workflow Automation', 'Dashboard'],
+    year: '2026',
     featured: true,
-    link: '#',
+    screenshot: '/src/assets/dmts.png',
+    accent: 'from-emerald-500 via-teal-500 to-cyan-600',
+    link: 'https://lgumatanao-dmts.com/',
+    metrics: [
+      { label: 'Efficiency', value: 'Enhanced' },
+      { label: 'Workflow', value: 'Automated' },
+      { label: 'Modules', value: 'Multi-dept' },
+    ],
+    highlights: [
+      'Digital media management and organization',
+      'Real-time workflow tracking and automation',
+      'Multi-department collaboration tools',
+      'Intuitive dashboard and reporting features',
+    ],
   },
   {
-    title: 'E-Commerce Landing Page',
+    title: 'Geo Attendance System',
+    category: 'Attendance • Geofencing • Monitoring',
     description:
-      'A premium product landing page with product highlights, reviews, pricing cards, and a conversion-focused layout.',
-    tech: ['React', 'CSS', 'UX Design'],
+      'A smart attendance and monitoring system built for efficient workforce tracking, location-based verification, and centralized reporting.',
+    overview:
+      'This capstone project demonstrates a practical attendance platform designed to improve accountability, automate time tracking, and provide a more reliable monitoring workflow for organizations and field operations.',
+    tech: ['FlutterFlow', 'Geofencing', 'Attendance', 'Reporting', 'Mobile'],
     year: '2025',
     featured: false,
-    link: '#',
+    screenshot: capstoneScreenshot,
+    accent: 'from-rose-500 via-red-500 to-orange-500',
+    link: 'https://geo-attendance-system.flutterflow.app/',
+    metrics: [
+      { label: 'Tracking', value: 'Location-based' },
+      { label: 'Access', value: 'Secure' },
+      { label: 'Reports', value: 'Real-time' },
+    ],
+    highlights: [
+      'Geofencing-enabled attendance validation',
+      'Mobile-first monitoring experience',
+      'Streamlined employee tracking and reporting',
+      'Built for practical operational use',
+    ],
   },
-  {
-    title: 'Task Manager App',
-    description:
-      'A productivity app with filterable tasks, local storage, and a clean interface for managing daily priorities.',
-    tech: ['JavaScript', 'React', 'LocalStorage'],
-    year: '2024',
-    featured: false,
-    link: '#',
-  },
-]
 
-export const education = [
-  {
-    degree: 'B.Sc. in Computer Science',
-    institution: 'University of Technology',
-    period: '2021 - 2025',
-    details: 'Focused on software engineering, web technologies, and data structures.',
-  },
-  {
-    degree: 'Frontend Development Diploma',
-    institution: 'Online Academy',
-    period: '2023 - 2024',
-    details: 'Built practical projects in HTML, CSS, JavaScript, and React.',
-  },
 ]
 
 export const certifications = [
-  { name: 'Responsive Web Design', provider: 'FreeCodeCamp', year: '2024' },
-  { name: 'JavaScript Algorithms and Data Structures', provider: 'FreeCodeCamp', year: '2024' },
-  { name: 'React Fundamentals', provider: 'Coursera', year: '2023' },
+  {
+    name: '2026 AI Technical Conference Participation',
+    provider: '2026 AI Fest',
+    year: '2026',
+    description:
+      'Certificate of participation in the 2026 AI Technical Conference, held during AI Fest in Iloilo City under the theme “Building an AI-Ready Future, Together.”',
+    image: aiFestCertificate,
+    tags: ['AI conference', 'AI Fest 2026', 'Technology participation'],
+  },
+  {
+    name: 'National Certificate II: Computer Systems Servicing',
+    provider: 'Technical Education and Skills Development Authority (TESDA)',
+    year: '2026',
+    description:
+      'A nationally recognized technical qualification covering computer system installation, network setup, server configuration, maintenance, repair, and workplace safety.',
+    image: nc2Certificate,
+    tags: ['Computer systems', 'Networking', 'Technical support'],
+  },
+  {
+    name: '1st Place: Startup Pitch Competition',
+    provider: 'DICT Region XI ICT Industry Development Bureau',
+    year: '2024',
+    description:
+      'Recognized with first place for presenting a startup concept at a regional ICT industry pitching competition, demonstrating product thinking, communication, and entrepreneurial initiative.',
+    images: [startupPhotoOne, startupPhotoTwo],
+    tags: ['1st place', 'Startup pitch', 'Innovation'],
+  },
+  {
+    name: 'Capstone Project Public Presentation',
+    provider: 'Davao del Sur State College',
+    year: '2025',
+    description:
+      'Certificate of participation for presenting a capstone project under the theme “Forging Innovations for Industry 4.0” at the Institute of Computing, Engineering and Technology.',
+    image: publicPresentationCertificate,
+    tags: ['Capstone project', 'Industry 4.0', 'Public presentation'],
+  },
 ]
 
 export const experience = [
   {
-    role: 'Frontend Developer Intern',
-    company: 'Creative Studio',
-    period: '2024 - Present',
+    role: 'Encoder and Billing Clerk',
+    company: 'Davao del Sur Provincial Hospital (DSPH)',
+    period: '2026',
     description:
-      'Created responsive landing pages, improved component consistency, and collaborated with designers to ship polished interfaces.',
+      'Processed daily hospital documents, encoded records and billing information in the system, and helped maintain accurate, organized administrative data.',
   },
   {
-    role: 'Web Design Volunteer',
-    company: 'Community Project',
-    period: '2023 - 2024',
+    role: 'IT Staff',
+    company: 'JDL Davao',
+    period: '2025',
     description:
-      'Designed and maintained simple websites for local initiatives, improving accessibility and user experience.',
+      'Organized day-to-day work through digital systems and improved the company website to support its marketing strategy and online presence.',
+  },
+  {
+    role: 'BSAIS Program Head Assistant (On-the-Job Training)',
+    company: 'Davao del Sur State College',
+    period: 'December 2024 - April 2025',
+    description:
+      'Designed promotional materials such as brochures, T-shirt layouts, and calling cards; assisted with clerical tasks, document organization, academic records, meeting preparation, and ISO-related documentation.',
   },
 ]
 
 export const contactLinks = [
-  { label: 'Email', value: 'hello@example.com', href: 'mailto:hello@example.com' },
-  { label: 'GitHub', value: 'github.com/yourname', href: 'https://github.com' },
-  { label: 'LinkedIn', value: 'linkedin.com/in/yourname', href: 'https://linkedin.com' },
-  { label: 'Location', value: 'Your City, Country', href: '#' },
+  { label: 'Email', value: 'geovarkierklatonio@gmail.com', href: 'mailto:geovarkierklatonio@gmail.com' },
+  { label: 'GitHub', value: 'github.com/geovarkierklatonio-ai', href: 'https://github.com/geovarkierklatonio-ai' },
+  { label: 'Facebook', value: 'facebook.com/Geo-Exe', href: 'https://www.facebook.com/people/Geo-Exe/pfbid0it162gzYzbLWLmNN6XaFt3frKGPtkaYC5EV1Zc9TZBsCYVaHXNw8Q2Ms3yZeNKDQl/' },
+  { label: 'Instagram', value: 'instagram.com/geo_jsx', href: 'https://www.instagram.com/geo_jsx' },
 ]

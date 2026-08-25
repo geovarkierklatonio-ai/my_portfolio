@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion, useScroll, useSpring, useTransform } from 'framer-motion'
 import {
   ArrowRight,
   Braces,
@@ -13,6 +13,8 @@ import {
   Share2,
   Sparkles,
   TerminalSquare,
+  Volume2,
+  VolumeX,
 } from 'lucide-react'
 import SectionTitle from './components/SectionTitle'
 import SkillCard from './components/SkillCard'
@@ -25,7 +27,6 @@ import {
   aboutContent,
   certifications,
   contactLinks,
-  education,
   experience,
   navItems,
   projects,
@@ -37,10 +38,84 @@ import {
 function App() {
   const [showSplash, setShowSplash] = useState(true)
   const [activeSection, setActiveSection] = useState('home')
+  const [voiceEnabled, setVoiceEnabled] = useState(false)
+  const [isSpeaking, setIsSpeaking] = useState(false)
+  const [voiceSupported, setVoiceSupported] = useState(true)
+  const voiceEnabledRef = useRef(false)
+  const phraseIndex = useRef(0)
+  const speechTimer = useRef(null)
+  const { scrollY, scrollYProgress } = useScroll()
+  const smoothScrollProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30, mass: 0.2 })
+  const gridParallax = useTransform(scrollY, [0, 3000], [0, -180])
+  const lightwashParallax = useTransform(scrollY, [0, 3000], [0, -320])
+
+  const voicePhrases = [
+    'Hey there.',
+    'Welcome to my portfolio.',
+    'Let’s build something meaningful.',
+    'AI-assisted. Human-driven.',
+    'Take a look around.',
+  ]
+
+  const speakNextPhrase = () => {
+    if (!window.speechSynthesis || !voiceEnabledRef.current) return
+
+    const utterance = new SpeechSynthesisUtterance(voicePhrases[phraseIndex.current])
+    const voices = window.speechSynthesis.getVoices()
+    utterance.voice = voices.find(voice => voice.lang.toLowerCase().startsWith('en')) || voices[0]
+    utterance.lang = utterance.voice?.lang || 'en-US'
+    utterance.rate = 0.92
+    utterance.pitch = 1.08
+    utterance.volume = 0.9
+    utterance.onstart = () => setIsSpeaking(true)
+    utterance.onend = () => {
+      setIsSpeaking(false)
+      phraseIndex.current = (phraseIndex.current + 1) % voicePhrases.length
+      speechTimer.current = window.setTimeout(speakNextPhrase, 1800)
+    }
+    utterance.onerror = () => {
+      voiceEnabledRef.current = false
+      setVoiceEnabled(false)
+      setIsSpeaking(false)
+    }
+    window.speechSynthesis.speak(utterance)
+    window.speechSynthesis.resume()
+  }
+
+  const toggleVoice = () => {
+    if (!window.speechSynthesis) {
+      setVoiceSupported(false)
+      return
+    }
+
+    if (voiceEnabled) {
+      window.speechSynthesis.cancel()
+      window.clearTimeout(speechTimer.current)
+      voiceEnabledRef.current = false
+      setVoiceEnabled(false)
+      setIsSpeaking(false)
+      return
+    }
+
+    phraseIndex.current = 0
+    voiceEnabledRef.current = true
+    setVoiceEnabled(true)
+    window.speechSynthesis.cancel()
+    speakNextPhrase()
+  }
 
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), 2600)
     return () => clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    setVoiceSupported('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window)
+  }, [])
+
+  useEffect(() => () => {
+    window.speechSynthesis?.cancel()
+    window.clearTimeout(speechTimer.current)
   }, [])
 
   useEffect(() => {
@@ -134,6 +209,11 @@ function App() {
             transition={{ duration: 0.7, ease: 'easeInOut' }}
             className="min-h-screen"
           >
+            <motion.div
+              aria-hidden="true"
+              className="fixed left-0 right-0 top-0 z-[60] h-1 origin-left bg-gradient-to-r from-violet-400 via-fuchsia-400 to-indigo-400 shadow-[0_0_18px_rgba(167,139,250,0.7)]"
+              style={{ scaleX: smoothScrollProgress }}
+            />
             <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
               <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
                 {/* Logo */}
@@ -236,7 +316,33 @@ function App() {
                 ></motion.div>
 
                 {/* Animated Grid Background */}
-                <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(6,182,212,0.03)_1px,transparent_1px),linear-gradient(rgba(6,182,212,0.03)_1px,transparent_1px)] bg-[size:50px_50px] opacity-40" />
+                <motion.div
+                  className="ambient-grid absolute inset-0 bg-[linear-gradient(90deg,rgba(6,182,212,0.03)_1px,transparent_1px),linear-gradient(rgba(6,182,212,0.03)_1px,transparent_1px)] bg-[size:50px_50px] opacity-40"
+                  style={{ y: gridParallax }}
+                />
+
+                {/* Moving Light Wash */}
+                <motion.div className="ambient-lightwash" style={{ y: lightwashParallax }} />
+
+                {/* AI Orbital Core */}
+                <div className={`ai-orbital-core ${isSpeaking ? 'is-speaking' : ''}`}>
+                  <div className="ai-neural-glow" />
+                  <div className="ai-neural-field" aria-hidden="true">
+                    {[...Array(13)].map((_, index) => (
+                      <span
+                        key={`neural-strand-${index}`}
+                        className="ai-neural-strand"
+                        style={{ '--strand-index': index }}
+                      />
+                    ))}
+                  </div>
+                  <div className="ai-neural-core" aria-hidden="true">
+                    <span className="ai-neural-core-dot" />
+                  </div>
+                  <div className="ai-neural-particles" aria-hidden="true" />
+                </div>
+
+                <div className="ambient-scanline" />
 
                 {/* Floating Particles */}
                 {[...Array(15)].map((_, i) => (
@@ -264,7 +370,7 @@ function App() {
                 <motion.div
                   className="absolute w-full h-full"
                   style={{
-                    background: 'radial-gradient(circle at 20% 50%, rgba(6, 182, 212, 0.1), transparent 50%)',
+                    background: 'radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.12), transparent 50%)',
                   }}
                   animate={{
                     opacity: [0.3, 0.6, 0.3],
@@ -306,9 +412,10 @@ function App() {
                       </h1>
                       <TypeWriter
                         items={[
-                          'BSIT STUDENT',
+                          'BACHELOR OF SCIENCE IN INFORMATION TECHNOLOGY ',
                           '2025 PROVINCIAL STARTUP CHAMPION',
                           'AI DEVELOPMENT',
+                          'COMPUTER SYSTEM SERVICING NC II PASSER',
                         ]}
                         typingSpeed={60}
                         deletingSpeed={30}
@@ -335,7 +442,7 @@ function App() {
                       </motion.a>
                       <motion.a
                         href="#contact"
-                        whileHover={{ scale: 1.05, y: -2, borderColor: 'rgba(34, 211, 238, 0.5)' }}
+                        whileHover={{ scale: 1.05, y: -2, borderColor: 'rgba(196, 181, 253, 0.5)' }}
                         whileTap={{ scale: 0.98 }}
                         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                         className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-3 font-semibold text-white transition hover:border-cyan-400/50 hover:text-cyan-200"
@@ -379,6 +486,18 @@ function App() {
                       </motion.a>
                     </div>
 
+                    <button
+                      type="button"
+                      onClick={toggleVoice}
+                      aria-pressed={voiceEnabled}
+                      aria-label={voiceSupported ? 'Toggle AI portfolio voice' : 'AI voice is not supported in this browser'}
+                      disabled={!voiceSupported}
+                      className="ai-voice-control inline-flex items-center gap-2 rounded-full border border-violet-300/30 bg-violet-500/10 px-4 py-2 text-sm font-medium text-violet-100 transition hover:border-violet-200/70 hover:bg-violet-500/20"
+                    >
+                      {voiceEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+                      {voiceSupported ? (voiceEnabled ? 'AI voice is on' : 'Meet the AI voice') : 'Voice unavailable'}
+                    </button>
+
                     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                       {stats.map((stat, index) => (
                         <motion.div
@@ -386,7 +505,7 @@ function App() {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.2 + index * 0.08, duration: 0.5 }}
-                          whileHover={{ y: -4, scale: 1.02, borderColor: 'rgba(34, 211, 238, 0.4)' }}
+                          whileHover={{ y: -4, scale: 1.02, borderColor: 'rgba(196, 181, 253, 0.4)' }}
                           className="rounded-2xl border border-white/10 bg-slate-900/60 p-4 cursor-pointer transition shadow-md hover:shadow-lg hover:shadow-cyan-500/20"
                         >
                           <div className="text-2xl font-bold text-white">{stat.value}</div>
@@ -440,7 +559,7 @@ function App() {
 
                         <div className="mt-5 grid grid-cols-2 gap-3">
                           <motion.div
-                            whileHover={{ y: -3, scale: 1.05, borderColor: 'rgba(34, 211, 238, 0.5)' }}
+                            whileHover={{ y: -3, scale: 1.05, borderColor: 'rgba(196, 181, 253, 0.5)' }}
                             className="rounded-2xl border border-white/10 bg-slate-900 p-3 cursor-pointer transition hover:shadow-md hover:shadow-cyan-500/20"
                           >
                             <p className="text-[10px] uppercase tracking-[0.25em] text-slate-400">Frontend</p>
@@ -453,7 +572,7 @@ function App() {
                             </motion.p>
                           </motion.div>
                           <motion.div
-                            whileHover={{ y: -3, scale: 1.05, borderColor: 'rgba(168, 85, 247, 0.5)' }}
+                            whileHover={{ y: -3, scale: 1.05, borderColor: 'rgba(196, 181, 253, 0.5)' }}
                             className="rounded-2xl border border-white/10 bg-slate-900 p-3 cursor-pointer transition hover:shadow-md hover:shadow-violet-500/20"
                           >
                             <p className="text-[10px] uppercase tracking-[0.25em] text-slate-400">Backend</p>
@@ -492,7 +611,7 @@ function App() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, amount: 0.2 }}
                     transition={{ duration: 0.5 }}
-                    whileHover={{ y: -4, scale: 1.01, borderColor: 'rgba(34, 211, 238, 0.4)' }}
+                    whileHover={{ y: -4, scale: 1.01, borderColor: 'rgba(196, 181, 253, 0.4)' }}
                     className="rounded-[2rem] border border-white/10 bg-slate-900/70 p-8 shadow-xl shadow-slate-950/30 cursor-pointer transition hover:shadow-2xl hover:shadow-cyan-500/20"
                   >
                     <motion.div
@@ -522,7 +641,7 @@ function App() {
                           whileInView={{ opacity: 1, y: 0 }}
                           viewport={{ once: true, amount: 0.2 }}
                           transition={{ delay: index * 0.08, duration: 0.45 }}
-                          whileHover={{ y: -2, scale: 1.01, borderColor: 'rgba(34, 211, 238, 0.5)' }}
+                          whileHover={{ y: -2, scale: 1.01, borderColor: 'rgba(196, 181, 253, 0.5)' }}
                           className="rounded-2xl border border-white/10 bg-slate-900/60 p-4 text-slate-200 cursor-pointer transition hover:shadow-md hover:shadow-cyan-500/10"
                         >
                           {item}
@@ -530,8 +649,8 @@ function App() {
                       ))}
                     </div>
                     <motion.a
-                      href="#"
-                      download
+                      href="/cv.pdf"
+                      download="CV.pdf"
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.98 }}
                       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -585,36 +704,6 @@ function App() {
               </motion.section>
 
               <motion.section
-                id="education"
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.6 }}
-                className="bg-slate-900/40 py-20"
-              >
-                <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-                  <SectionTitle
-                    eyebrow="Education"
-                    title="Academic background"
-                    description="My education helped me build a strong foundation in software engineering and modern web technologies."
-                  />
-
-                  <div className="space-y-8">
-                    {education.map((item) => (
-                      <TimelineItem
-                        key={item.degree}
-                        title={item.degree}
-                        subtitle={item.institution}
-                        period={item.period}
-                        description={item.details}
-                        accent="cyan"
-                      />
-                    ))}
-                  </div>
-                </div>
-              </motion.section>
-
-              <motion.section
                 id="certifications"
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -628,7 +717,7 @@ function App() {
                   description="I continue to learn and adapt, using modern resources and AI-assisted workflows to stay competitive and effective."
                 />
 
-                <div className="grid gap-5 md:grid-cols-3">
+                <div className="grid gap-6 lg:grid-cols-3">
                   {certifications.map((cert, index) => (
                     <motion.div
                       key={cert.name}
@@ -636,21 +725,52 @@ function App() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true, amount: 0.2 }}
                       transition={{ delay: index * 0.08, duration: 0.45 }}
-                      whileHover={{ y: -6, scale: 1.02, borderColor: 'rgba(34, 211, 238, 0.4)' }}
-                      className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-xl shadow-slate-950/20 cursor-pointer transition hover:shadow-2xl hover:shadow-cyan-500/20"
+                      whileHover={{ y: -6, scale: 1.02, borderColor: 'rgba(196, 181, 253, 0.4)' }}
+                      className="group overflow-hidden rounded-3xl border border-white/10 bg-slate-900/70 shadow-xl shadow-slate-950/20 transition hover:shadow-2xl hover:shadow-cyan-500/20"
                     >
-                      <motion.div
-                        className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-violet-500 text-slate-950"
-                        whileHover={{ rotate: 12, scale: 1.1 }}
-                        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                      >
-                        <GraduationCap size={20} />
-                      </motion.div>
-                      <h3 className="text-xl font-semibold text-white">{cert.name}</h3>
-                      <p className="mt-2 text-slate-300">{cert.provider}</p>
-                      <span className="mt-4 inline-flex rounded-full border border-emerald-400/40 bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-200">
-                        {cert.year}
-                      </span>
+                      <div className="relative aspect-[4/3] overflow-hidden bg-slate-950">
+                        {cert.images ? (
+                          <div className="grid h-full grid-cols-2 gap-1">
+                            {cert.images.map((image, imageIndex) => (
+                              <img
+                                key={image}
+                                src={image}
+                                alt={`${cert.name} photo ${imageIndex + 1}`}
+                                className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                              />
+                            ))}
+                          </div>
+                        ) : (
+                          <img
+                            src={cert.image}
+                            alt={cert.name}
+                            className="h-full w-full object-cover object-top transition duration-500 group-hover:scale-105"
+                          />
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+                        <span className="absolute bottom-4 left-4 inline-flex rounded-full border border-cyan-300/30 bg-slate-950/75 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200 backdrop-blur-sm">
+                          {cert.year}
+                        </span>
+                      </div>
+
+                      <div className="p-6">
+                        <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-violet-500 text-slate-950">
+                          <GraduationCap size={19} />
+                        </div>
+                        <h3 className="text-xl font-semibold leading-tight text-white">{cert.name}</h3>
+                        <p className="mt-3 text-sm font-medium text-cyan-300">{cert.provider}</p>
+                        <p className="mt-3 text-sm leading-6 text-slate-300">{cert.description}</p>
+                        <div className="mt-5 flex flex-wrap gap-2">
+                          {cert.tags.map((tag) => (
+                            <span
+                              key={tag}
+                              className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-slate-300"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
                     </motion.div>
                   ))}
                 </div>
@@ -698,9 +818,9 @@ function App() {
                   <div className="grid gap-8 lg:grid-cols-[1fr_0.8fr] lg:items-center">
                     <div>
                       <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400">Contact</p>
-                      <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl">Let’s build something meaningful together.</h2>
+                      <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl">Let’s build something that moves your business forward.</h2>
                       <p className="mt-4 max-w-xl text-slate-300">
-                        I’m open to full stack roles, product engineering opportunities, and collaborative work where I can build meaningful digital experiences using both strong fundamentals and modern AI-assisted workflows.
+                        I help businesses turn ideas and challenges into modern, effective web solutions that improve workflows, strengthen their digital presence, and create better experiences for their customers. By combining strong development fundamentals with modern tools and AI-assisted workflows, I build solutions that are practical, scalable, and focused on real business results.
                       </p>
                     </div>
 
@@ -713,7 +833,7 @@ function App() {
                           whileInView={{ opacity: 1, x: 0 }}
                           viewport={{ once: true, amount: 0.2 }}
                           transition={{ delay: index * 0.08, duration: 0.4 }}
-                          whileHover={{ x: 8, borderColor: 'rgba(34, 211, 238, 0.5)', backgroundColor: 'rgba(30, 41, 59, 0.9)' }}
+                          whileHover={{ x: 8, borderColor: 'rgba(196, 181, 253, 0.5)', backgroundColor: 'rgba(36, 26, 66, 0.9)' }}
                           className="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-slate-900/70 px-4 py-3 text-left transition cursor-pointer hover:shadow-md hover:shadow-cyan-500/10"
                         >
                           <div>
@@ -725,21 +845,6 @@ function App() {
                           </motion.div>
                         </motion.a>
                       ))}
-                      <motion.a
-                        href="mailto:hello@example.com"
-                        initial={{ opacity: 0, y: 18 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.2 }}
-                        transition={{ delay: 0.12, duration: 0.4 }}
-                        whileHover={{ scale: 1.05, y: -2 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="mt-4 inline-flex items-center gap-2 rounded-full bg-cyan-400 px-5 py-3 font-semibold text-slate-950 transition cursor-pointer shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50"
-                      >
-                        <motion.div animate={{ y: [0, -4, 0] }} transition={{ duration: 1.2, repeat: Infinity }}>
-                          <Download size={18} />
-                        </motion.div>
-                        Download CV
-                      </motion.a>
                     </div>
                   </div>
                 </div>
