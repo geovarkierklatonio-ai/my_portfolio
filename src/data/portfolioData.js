@@ -1,4 +1,5 @@
 import capstoneScreenshot from '../assets/capstone.png'
+import dmtsScreenshot from '../assets/dmts.png'
 import aiFestCertificate from '../assets/AIFEST.png'
 import nc2Certificate from '../assets/nc2.jpg'
 import publicPresentationCertificate from '../assets/publicpresentation.jpg'
@@ -139,7 +140,7 @@ export const projects = [
     tech: ['React', 'Laravel', 'MySQL', 'Workflow Automation', 'Dashboard'],
     year: '2026',
     featured: true,
-    screenshot: '/src/assets/dmts.png',
+    screenshot: dmtsScreenshot,
     accent: 'from-emerald-500 via-teal-500 to-cyan-600',
     link: 'https://lgumatanao-dmts.com/',
     metrics: [
